@@ -90,7 +90,7 @@ struct expression {
 			second = nullptr;
 			return;	
 		}
-		if(s[0] == ')') {
+		if(s[0] == '(') {
 			*this = expression(s.substr(1, s.length() - 1));
 			return;		
 		}
