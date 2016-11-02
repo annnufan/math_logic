@@ -136,9 +136,16 @@ bool equal_tree(expression a, expression b, map<string, string> m) {
 	if (a.type != b.type && a.type != 4)
 		return false;
 	if (a.type != 4) {
-		return equal_tree(*(a.left), *(b.left), m) && equal_tree(*(a.right), *(b.right), m);
+		bool v = equal_tree(*(a.first), *(b.first), m);
+		if (a.type != 3)
+			v = v && equal_tree(*(a.second), *(b.second), m);
+		return v;
 	}
-	
+	if (m[a.val] == "") {
+		m[a.val] = b.expr;
+		return true;		
+	}
+	return m[a.val] == b.expr;
 }
 
 
