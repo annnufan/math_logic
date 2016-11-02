@@ -11,7 +11,7 @@ ifstream fin("in.in");
 ofstream fout("out.out");
 
 string to_string(string s) {
-	string ans;
+	string ans = "";
 	for (int i = 0; i < s.length(); i++) {
 		if (s[i] != ' ') 
 			ans += s[i];
@@ -33,8 +33,7 @@ string to_string_int(int x) {
 
 struct expression {
 	expression(string s) {
-		s = to_string(s);
-		expr = s;
+		expr = s = to_string(s);
 		int i = 0, balance = 0;
 		while (i < s.length() && (s[i] != '-' || balance != 0)) {
 			if (s[i] == '(')
@@ -89,9 +88,9 @@ struct expression {
 			second = nullptr;
 			return;	
 		}
-		
 		if(s[0] == '(') {
-			*this = expression(s.substr(1, s.length() - 1));
+			*this = expression(s.substr(1, s.length() - 2));
+			expr = s;
 			return;		
 		}
 		
@@ -130,15 +129,21 @@ void axiom_parse(string s){
 }
 
 
-bool equal_tree(expression a, expression b, map<string, string> m) {
-	if (a.type != b.type && a.type != 4)
+bool equal_tree(expression a, expression b, map<string, string>& m) {
+//	fout << a.expr << ' ' << b.expr << endl << a.type << ' ' << b.type << endl;
+	if (a.type != b.type && a.type != 4) {
+//		fout << "type another" << endl;
 		return false;
+	}
 	if (a.type != 4) {
+//		fout << "type not 4" << endl;
 		bool v = equal_tree(*(a.first), *(b.first), m);
 		if (a.type != 3)
 			v = v && equal_tree(*(a.second), *(b.second), m);
 		return v;
 	}
+//	fout << "my type 4 " << a.val << ' ' << m[a.val] << ' ' << b.expr << endl;
+	
 	if (m[a.val] == "") {
 		m[a.val] = b.expr;
 		return true;		
@@ -180,7 +185,7 @@ string annotation(string s) {
 			string a = to_string_int(i + 1);
 			return "Сх. акс. " + a;	
 		}	
-	}
+	}      
 	
 	return "Не доказано";
 }
@@ -194,7 +199,7 @@ int main() {
 	
 	for (int i = 0; i < 10; i++) {
 		scheme_axiom.push_back(expression(arr[i]));
-	}
+	}     
 	
 	int i = 1;
 	fout << to_string(head) << endl;
