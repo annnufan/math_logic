@@ -32,8 +32,12 @@ string to_string_int(int x) {
 }
 
 struct expression {
+	expression() {
+		val = "";	
+	}
+	
 	expression(string s) {
-		expr = s = to_string(s);
+		s = to_string(s);
 		int i = 0, balance = 0;
 		while (i < s.length() && (s[i] != '-' || balance != 0)) {
 			if (s[i] == '(')
@@ -90,7 +94,6 @@ struct expression {
 		}
 		if(s[0] == '(') {
 			*this = expression(s.substr(1, s.length() - 2));
-			expr = s;
 			return;		
 		}
 		
@@ -105,13 +108,27 @@ struct expression {
 
 	int type;
 	expression *first, *second;
-	string val, expr;	
+	string val;	
 };
+
+bool exact_equal_tree(expression a, expression b) {
+	if (a.type != b.type) {
+		return false;
+	}
+	if (a.type != 4) {
+		bool v = exact_equal_tree(*(a.first), *(b.first));
+		if (a.type != 3)
+			v = v && exact_equal_tree(*(a.second), *(b.second));
+		return v;
+	}
+	
+	return a.val == b.val;
+}
 
 vector<expression> axioms, evidence, scheme_axiom;
 
 bool operator==(expression& a, expression& b) {
-	return to_string(a.expr) == to_string(b.expr); 		
+	return exact_equal_tree(a, b); 		
 }
 
 void axiom_parse(string s){
@@ -129,26 +146,22 @@ void axiom_parse(string s){
 }
 
 
-bool equal_tree(expression a, expression b, map<string, string>& m) {
-//	fout << a.expr << ' ' << b.expr << endl << a.type << ' ' << b.type << endl;
+bool equal_tree(expression a, expression b, map<string, expression>& m) {
 	if (a.type != b.type && a.type != 4) {
-//		fout << "type another" << endl;
 		return false;
 	}
 	if (a.type != 4) {
-//		fout << "type not 4" << endl;
 		bool v = equal_tree(*(a.first), *(b.first), m);
 		if (a.type != 3)
 			v = v && equal_tree(*(a.second), *(b.second), m);
 		return v;
 	}
-//	fout << "my type 4 " << a.val << ' ' << m[a.val] << ' ' << b.expr << endl;
 	
-	if (m[a.val] == "") {
-		m[a.val] = b.expr;
+	if (m[a.val].val == "") {
+		m[a.val] = b;
 		return true;		
 	}
-	return m[a.val] == b.expr;
+	return m[a.val] == b;
 }
 
 
@@ -180,7 +193,7 @@ string annotation(string s) {
 	
 	
 	for (int i = 0; i < 10; i++) {
-		map<string, string> m;
+		map<string, expression> m;
 		if (equal_tree(scheme_axiom[i], x, m)) {
 			string a = to_string_int(i + 1);
 			return "Сх. акс. " + a;	
