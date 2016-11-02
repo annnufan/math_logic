@@ -33,7 +33,7 @@ string to_string_int(int x) {
 
 struct expression {
 	expression() {
-		val = "";	
+		type = -1;	
 	}
 	
 	expression(string s) {
@@ -157,11 +157,11 @@ bool equal_tree(expression a, expression b, map<string, expression>& m) {
 		return v;
 	}
 	
-	if (m[a.val].val == "") {
+	if (m[a.val].type == -1) {
 		m[a.val] = b;
 		return true;		
 	}
-	return m[a.val] == b;
+	return exact_equal_tree(m[a.val], b);
 }
 
 
