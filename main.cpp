@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <map>
 
 using namespace std;
 
@@ -106,7 +107,7 @@ struct expression {
 	string val, expr;	
 };
 
-vector<expression> axioms, evidence;
+vector<expression> axioms, evidence, scheme_axiom;
 
 bool operator==(expression& a, expression& b) {
 	return to_string(a.expr) == to_string(b.expr); 		
@@ -131,6 +132,16 @@ void axiom_parse(string s){
 }
 
 
+bool equal_tree(expression a, expression b, map<string, string> m) {
+	if (a.type != b.type && a.type != 4)
+		return false;
+	if (a.type != 4) {
+		return equal_tree(*(a.left), *(b.left), m) && equal_tree(*(a.right), *(b.right), m);
+	}
+	
+}
+
+
 
 string annotation(string s) {
 	expression x(s);
@@ -141,7 +152,7 @@ string annotation(string s) {
 		//fout << axioms[i - 1].expr << ' ' << x.expr << endl;
 		if (axioms[i] == x) {
 			string a = to_string_int(i + 1);
-			return "Предп. " + a;
+			return "РџСЂРµРґРї. " + a;
 		}
 	}
 	
@@ -160,10 +171,15 @@ string annotation(string s) {
 	}
 	
 	
-// TODO Написать проверку на схемы аксиом	
+	for (int i = 0; i < 10; i++) {
+		map<string, string> m;
+		if (equal_tree(scheme_axiom[i], x, m)) {
+			string a = to_string_int(i + 1);
+			return "РЎС…. Р°РєСЃ. " + a;	
+		}	
+	}
 	
-	
-	return "Не доказано";
+	return "РќРµ РґРѕРєР°Р·Р°РЅРѕ";
 }
 
 int main() {
@@ -171,11 +187,13 @@ int main() {
 	cin >> head;
 	expression a(head);
 	axiom_parse(head);
+	string arr[10] = {"a->b->a", "(a->b)->(a->b->c)->(a->c)", "a->b->a&b", "a&b->a", "a&b->b", "a->a|b", "b->a|b", "(a->c)->(b->c)->(a|b->c)", "(a->b)->(a->!b)->!a", "!!a->a"}; 
 	
-	for (int i = 1; i <= (int)axioms.size(); i++) {
-		fout << axioms[i - 1].expr << endl;
-		
+	for (int i = 0; i < 10; i++) {
+		scheme_axiom.push_back(expression(arr[i]));
 	}
+	
+		
 
 	int i = 1;
 	fout << to_string(head) << endl;
