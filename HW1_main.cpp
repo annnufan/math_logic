@@ -89,7 +89,7 @@ struct expression {
 		if (s[0] == '!') {
 			type = 3;
 			first = new expression(s.substr(1));
-			second = nullptr;
+			second = 0;
 			return;	
 		}
 		if(s[0] == '(') {
@@ -99,8 +99,8 @@ struct expression {
 		
 		type = 4;
 		val = s;
-		first = nullptr;
-		second = nullptr;			
+		first = 0;
+		second = 0;			
 	}
 	
 	friend bool operator==(expression& a, expression& b);
@@ -178,7 +178,7 @@ string annotation(string s) {
 	}
 	
 	for (int i = 0; i < evidence.size() - 1; i++) {
-		auto v = evidence[i];
+		expression v = evidence[i];
 		if (v.type == 0 && *(v.second) == x) {
 			for (int j = 0; j < evidence.size()  -1; j++) {
 				if (evidence[j] == *(v.first))  {
