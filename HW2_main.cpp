@@ -586,7 +586,7 @@ bool annotation(string s) {
 			evidence.back()->type_in_proof = 1;
 			return true;	
 		}	
-		if ((i >= 10) && exact_equal_tree(scheme_axiom[i], x, m)) {
+		if ((i >= 10) && exact_equal_tree(scheme_axiom[i], x)) {
 			evidence.back()->type_in_proof = 1;
 			return true;	
 		}
