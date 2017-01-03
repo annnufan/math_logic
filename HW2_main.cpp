@@ -582,10 +582,14 @@ bool annotation(string s) {
 	for (int i = 0; i < 20; i++) {
 		map<string, expression*> m;
 		expression change;
-		if (equal_tree(scheme_axiom[i], x, m)) {
+		if ((i < 10) && equal_tree(scheme_axiom[i], x, m)) {
 			evidence.back()->type_in_proof = 1;
 			return true;	
 		}	
+		if ((i >= 10) && exact_equal_tree(scheme_axiom[i], x, m)) {
+			evidence.back()->type_in_proof = 1;
+			return true;	
+		}
 		
 		if ((i == 10 || i == 11) && free_to_subst(x, change, error, i)) {
 			evidence.back()->type_in_proof = 1;
