@@ -598,7 +598,7 @@ bool annotation(string s) {
 		string err;
 		if (tree_with_subst(fi, x->first->first, kv->first, change, err) && change.type == 12 && *(kv->second->first) == *(fi)) {
 			change = expression();
-			if (tree_with_subst(fi, kv->second->second, kv->first, change, err) && change.type == 11 && *(change.first) == *(kv->first)) {
+			if (tree_with_subst(fi, kv->second->second, kv->first, change, err) && change.type == 11 && *(change.first) == *(kv->first) && !consist(fi, x)) {
 				evidence.back()->type_in_proof = 1;
 				return true;
 			}
@@ -612,7 +612,7 @@ bool annotation(string s) {
 
 void change_proof(expression* x) {
 	if (alpha->type == -1) {
-		fout << to_string(x->val) << endl;
+		fout << to_string(x->val) << "\n";
 		return;
 	}
 	if (x->type_in_proof <= 1 && !(*(x) == *(alpha))) {
@@ -678,17 +678,17 @@ void change_proof(expression* x) {
 	string s, a = "(" + alpha->val + ")", b = "(" + x->first->val + ")", c = "(" + x->mppart->second->val + ")";
 	string ij = "(" + x->mppart->val + ")", aj = "(" + a + "->(" + x->second->val + "))", i = "(" + x->mppart->first->val + ")";  
 	while (getline(fin, s)) {
-	for (char ch : s) {
-		if (ch == 'a')
-			fout << a;
-		if (ch == 'b')
-			fout << b;
-		if (ch == 'c')
-			fout << c;
-		if (ch!= 'a' && ch!='b' && ch!= 'c')
-			fout << ch;
-	}	
-	fout << "\n";		
+		for (char ch : s) {
+			if (ch == 'a')
+				fout << a;
+			if (ch == 'b')
+				fout << b;
+			if (ch == 'c')
+				fout << c;
+			if (ch!= 'a' && ch!='b' && ch!= 'c')
+				fout << ch;
+		}	
+		fout << "\n";		
 	}
 	fout << i << "->" << aj << "\n";
 	b = a;
@@ -706,7 +706,7 @@ void change_proof(expression* x) {
 			if (ch!= 'a' && ch!='b' && ch!= 'c')
 				fout << ch;
 		}
-		fout << endl;
+		fout << "\n";
 	}
 	fout << b << "->" << x->val << "\n";
 }
@@ -724,7 +724,7 @@ int main() {
 	while (getline(fin, s)) {
 		// fout << s << endl;
 		if (!annotation(s)) {	
-			fout << s_annotation << endl;
+			fout << s_annotation << "\n";
 			return 0;
 		}
 	}
