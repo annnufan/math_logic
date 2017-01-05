@@ -11,6 +11,28 @@ ifstream fin("in.in");
 ofstream fout("out.out");
 
 string s_annotation = "";
+string lemm1 = "";
+string lemm2 = "";
+string lemm3 = "";
+
+void init() {
+	ifstream in1("lemma1.in");
+	string s;
+	while (getline(in1, s)) {
+		lemm1 += s + "\n";		
+	}
+	in1.close();
+	ifstream in2("lemma2.in");
+	while (getline(in2, s)) {
+		lemm2 += s + "\n";		
+	}
+	in2.close();
+	ifstream in3("lemma3.in");
+	while (getline(in3, s)) {
+		lemm3 += s + "\n";		
+	}
+	in3.close();
+}
 
 string to_string(string s) {
 	string ans = "";
@@ -580,19 +602,17 @@ bool annotation(string s) {
 	}  
 	// fout << "Scheme of axiom\n";
 	for (int i = 0; i < 20; i++) {
+		evidence.back()->type_in_proof = 1;
 		map<string, expression*> m;
 		expression change;
 		if ((i < 10) && equal_tree(scheme_axiom[i], x, m)) {
-			evidence.back()->type_in_proof = 1;
 			return true;	
 		}	
 		if ((i >= 10) && exact_equal_tree(scheme_axiom[i], x)) {
-			evidence.back()->type_in_proof = 1;
 			return true;	
 		}
 		
 		if ((i == 10 || i == 11) && free_to_subst(x, change, error, i)) {
-			evidence.back()->type_in_proof = 1;
 			return true;	
 		}
 	}  
@@ -603,7 +623,6 @@ bool annotation(string s) {
 		if (tree_with_subst(fi, x->first->first, kv->first, change, err) && change.type == 12 && *(kv->second->first) == *(fi)) {
 			change = expression();
 			if (tree_with_subst(fi, kv->second->second, kv->first, change, err) && change.type == 11 && *(change.first) == *(kv->first) && !consist(fi, x)) {
-				evidence.back()->type_in_proof = 1;
 				return true;
 			}
 		}	
@@ -620,69 +639,33 @@ void change_proof(expression* x) {
 		return;
 	}
 	if (x->type_in_proof <= 1 && !(*(x) == *(alpha))) {
-		fout << x->val <<"\n(" << x->val << ")->(" << alpha->val << ")->(" << x->val << ")\n(" << alpha->val << ")->(" << x->val << ")\n";
+		fout << x->val <<"\n";
+		fout << "(" << x->val << ")->(" << alpha->val << ")->(" << x->val << ")\n";
+		fout << "(" << alpha->val << ")->(" << x->val << ")\n";
+		// fout << "1\n";
 		return;
 	}
 	if (*(x) == *(alpha)) {
 		string a = "(" + alpha->val + ")", aa = a + "->" + a;
-		fout << a << "->(" << aa << ")\n";
-		fout << "(" << a << "->(" << aa << "))->(" << a << "->((" << aa << ")->" << a << "))->(" << aa << ")\n";
-		fout << "(" << a << "->((" << aa << ")->" << a << "))->(" << aa << ")\n";
-		fout << "(" << a << "->((" << aa << ")->" << a << "))\n";
+		fout << a << "->" << aa << "\n";
+		fout << "(" << a << "->" << aa << ")->(" << a << "->(" << aa << ")->" << a << ")->" << aa << "\n";
+		fout << "(" << a << "->(" << aa << ")->" << a << ")->" << aa << "\n";
+		fout << a << "->(" << aa << ")->" << a << "\n";
 		fout << aa << "\n";
+		// fout << "0\n";
 		return;
 	}
 	if (x->type_in_proof == 2) {
-		string a = "(" + alpha->val + ")", aj = a + "->(" + x->mppart->val + ")", ai = a + "->(" + x->val + ")", ji = "(" + x->mppart->val + ")->(" + x->val + ")";
-		fout << "(" << aj << ")->((" << a << "->(" << ji << "))->(" << ai << "))\n";
-		fout << "((" << a << "->(" << ji << "))->(" << ai << "))\n";
+		string a = "(" + alpha->val + ")", aj = a + "->" + x->mppart->val, ai = a + "->" + x->val, ji = "(" + x->mppart->val + ")->" + x->val;
+		fout << "(" << aj << ")->(" << a << "->" << ji << ")->" << ai << "\n";
+		fout << "(" << a << "->" << ji << ")->" << ai << "\n";
 		fout << ai << "\n";
+		// fout << "2\n";
 		return;
 	}
 	if (x->type_in_proof == 3) {
-		fin = ifstream("lemma1.in");
-		string s, a = "(" + alpha->val + ")", b = "(" + x->first->val + ")", c = "(" + x->mppart->second->val + ")";
-		while (getline(fin, s)) {
-			for (char ch : s) {
-				if (ch == 'a')
-					fout << a;
-				if (ch == 'b')
-					fout << b;
-				if (ch == 'c')
-					fout << c;
-				if (ch!= 'a' && ch!='b' && ch!= 'c')
-					fout << ch;
-			}	
-			fout << "\n";		
-		}
-		string ij = "(" + x->mppart->val + ")", ai = "(" + a + "&(" + x->first->val + "))", j = "(" + x->mppart->second->val + ")";
-		//fout << "(" << a << "->" << ij << ")->(" << ai << "->" << j << ")\n";
-		fout << "(" << ai << "->" << j << ")\n";
-		c = x->second->val;
-		fout << ai << "->(" << c << ")\n";
-		fin = ifstream("lemma2.in");
-		while (getline(fin, s)) {
-			for (char ch : s) {
-				if (ch == 'a')
-					fout << a;
-				if (ch == 'b')
-					fout << b;
-				if (ch == 'c')
-					fout << c;
-				if (ch!= 'a' && ch!='b' && ch!= 'c')
-					fout << ch;
-			}	
-			fout << "\n";		
-		}
-		//fout << "(" << ai << "->(" << x->second->val << "))->(" << a << "->" << x->val << ")\n";
-		fout << a << "->" << x->val << "\n";
-		return;
-	}
-	fin = ifstream("lemma3.in");
-	string s, a = "(" + alpha->val + ")", b = "(" + x->first->val + ")", c = "(" + x->mppart->second->val + ")";
-	string ij = "(" + x->mppart->val + ")", aj = "(" + a + "->(" + x->second->val + "))", i = "(" + x->mppart->first->val + ")";  
-	while (getline(fin, s)) {
-		for (char ch : s) {
+		string a = "(" + alpha->val + ")", b = "(" + x->first->val + ")", c = "(" + x->second->second->val + ")";
+		for (char ch : lemm1) {
 			if (ch == 'a')
 				fout << a;
 			if (ch == 'b')
@@ -692,15 +675,11 @@ void change_proof(expression* x) {
 			if (ch!= 'a' && ch!='b' && ch!= 'c')
 				fout << ch;
 		}	
-		fout << "\n";		
-	}
-	fout << i << "->" << aj << "\n";
-	b = a;
-	a = x->first->val;
-	fout << "(" <<  a << ")->" << aj << "\n";
-	fin = ifstream("lemma3.in");
-	while (getline(fin, s)) {
-		for (char ch : s) {
+		string ij = "(" + x->mppart->val + ")", ai = "(" + a + "&(" + x->first->val + "))";
+		fout << "" << ai << "->" << c << "\n";
+		c = x->second->val;
+		fout << ai << "->(" << c << ")\n";
+		for (char ch : lemm2) {
 			if (ch == 'a')
 				fout << a;
 			if (ch == 'b')
@@ -710,12 +689,41 @@ void change_proof(expression* x) {
 			if (ch!= 'a' && ch!='b' && ch!= 'c')
 				fout << ch;
 		}
-		fout << "\n";
+		fout << a << "->" << x->val << "\n";
+		// fout << "3\n";
+		return;
+	}
+	string a = "(" + alpha->val + ")", b = "(" + x->first->second->val + ")", c = "(" + x->second->val + ")";
+	for (char ch : lemm3) {
+		if (ch == 'a')
+			fout << a;
+		if (ch == 'b')
+			fout << b;
+		if (ch == 'c')
+			fout << c;
+		if (ch!= 'a' && ch!='b' && ch!= 'c')
+			fout << ch;
+	}
+	fout << b << "->" << a << "->" << c << "\n";
+	b = a;
+	a = x->first->val;
+	fout << "(" <<  a << ")->" << b << "->" << c << "\n";
+	for (char ch : lemm3) {
+		if (ch == 'a')
+			fout << a;
+		if (ch == 'b')
+			fout << b;
+		if (ch == 'c')
+			fout << c;
+		if (ch!= 'a' && ch!='b' && ch!= 'c')
+			fout << ch;
 	}
 	fout << b << "->" << x->val << "\n";
+	// fout << "4\n";
 }
 
 int main() {
+	init();
 	string head, s;
 	getline(fin, head);
 	axiom_parse(head);
