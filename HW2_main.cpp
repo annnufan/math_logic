@@ -736,7 +736,7 @@ int main() {
 	while (getline(fin, s)) {
 		// fout << s << endl;
 		if (!annotation(s)) {	
-			fout << s_annotation << "\n";
+			fout << s_annotation << "\n" << s;
 			return 0;
 		}
 	}
