@@ -8,6 +8,7 @@ ifstream base("base.in");
 ifstream proof("proof.in");
 ifstream proof2("proof2.in");
 ifstream morgan("Morgan.in");
+ifstream lemm("lemm for a'+b.in");
 
 ifstream fin("in.in");
 ofstream fout("out.out");
@@ -59,6 +60,8 @@ int main() {
 		fout << "(" << A << "+" << C << ")=" << B << "->?p(" << A << "+p)=" << B << "\n";
 		fout << "?p(" << A << "+p)=" << B << "\n";
 	} else {
+		while (getline(lemm, s))
+			fout << s << "\n";
 		//C0 = C-1
 		c = -c;
 		string C0 = "", B = "";
