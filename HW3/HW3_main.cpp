@@ -45,16 +45,13 @@ int main() {
 		}
 		string sh = "";
 		for (int i = 0; i < c; i++) {
-			string p = "";
 			for (char ch:my_proof) {
 				if (ch == '#') {
-					p += sh;
+					fout << sh;
 				} else {
-					p += ch;
+					fout << ch;
 				}
 			}
-			my_proof = p;
-			fout << my_proof;
 			sh += "'";
 		}
 		fout << "(" << A << "+" << C << ")=" << B << "->?p(" << A << "+p)=" << B << "\n";
