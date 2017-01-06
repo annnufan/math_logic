@@ -59,30 +59,42 @@ int main() {
 		fout << "(" << A << "+" << C << ")=" << B << "->?p(" << A << "+p)=" << B << "\n";
 		fout << "?p(" << A << "+p)=" << B << "\n";
 	} else {
-		//A0 = A-1
-		string A0 = "0", B = "0";
-		for (int i = 0; i < a - 1; i++) {
+		//C0 = C-1
+		c = -c;
+		string C0 = "", B = "";
+		for (int i = 0; i < c - 1; i++) {
 			if (i < b)
 				B += "'";
-			A0 += "'";
+			C0 += "'";
+		}
+		if (c - 1 < b) {
+			for (int i = c - 1; i < b; i++) {
+				B += "'";
+			}
 		}
 		s = "";
 		while (getline(proof2, s)) {
 			for (char ch:s) {
-				if (ch == 'A') {
-					fout << A0;
+				if (ch == 'C') {
+					fout << C0;
 				} else {
-					fout << ch;
+					if (ch == 'B'){
+						fout << B;
+					} else
+						fout << ch;
 				}
 			}
 			fout << "\n";
 		}
 		while (getline(morgan, s)) {
 			for (char ch:s) {
-				if (ch == 'A') {
-					fout << A0;
+				if (ch == 'C') {
+					fout << C0;
 				} else {
-					fout << ch;
+					if (ch == 'B'){
+						fout << B;
+					} else
+						fout << ch;
 				}
 			}
 			fout << "\n";
