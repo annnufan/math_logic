@@ -302,7 +302,7 @@ void annotation(string s) {
 			break;
 		}
 	}
-	if (flag == -1)
+	if (flag != -1)
 		fout << s << endl;
 	evidence.push_back(x);
 }
