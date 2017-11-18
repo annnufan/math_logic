@@ -1,0 +1,46 @@
+(x'+y)=(x+y)' |- (x'+y')=(x+y')'
+
+@a@b(a+b'=(a+b)')->@b(x'+b'=(x'+b)')
+@b(x'+b'=(x'+b)')
+@b(x'+b'=(x'+b)')->x'+y'=(x'+y)'
+x'+y'=(x'+y)'
+@a@b(a=b->a'=b')->@b(x'+y=b->(x'+y)'=b')
+@b(x'+y=b->(x'+y)'=b')
+@b(x'+y=b->(x'+y)'=b')->x'+y=(x+y)'->(x'+y)'=(x+y)''
+x'+y=(x+y)'->(x'+y)'=(x+y)''
+x'+y=(x+y)' -- HIPOTIZE
+(x'+y)'=(x+y)'' -- WITH HIPOTIZE
+
+@a@b(a+b'=(a+b)')->@b(x+b'=(x+b)')
+@b(x+b'=(x+b)')
+@b(x+b'=(x+b)')->x+y'=(x+y)'
+x+y'=(x+y)'
+
+@a@b(a=b->a'=b')->@b(x+y'=b->(x+y')'=b')
+@b(x+y'=b->(x+y')'=b')
+@b(x+y'=b->(x+y')'=b')->x+y'=(x+y)'->(x+y')'=(x+y)''
+x+y'=(x+y)'->(x+y')'=(x+y)''
+(x+y')'=(x+y)''
+
+
+@a@b(a=b->b=a)->@b((x+y')'=b->b=(x+y')')
+@b((x+y')'=b->b=(x+y')')
+@b((x+y')'=b->b=(x+y')')->(x+y')'=(x+y)''->(x+y)''=(x+y')'
+(x+y')'=(x+y)''->(x+y)''=(x+y')'
+(x+y)''=(x+y')'
+
+@a@b@q(a=q->q=b->a=b)->@b@q(x'+y'=q->q=b->x'+y'=b)
+@b@q(x'+y'=q->q=b->x'+y'=b)
+@b@q(x'+y'=q->q=b->x'+y'=b)->@q(x'+y'=q->q=(x+y)''->x'+y'=(x+y)'')
+@q(x'+y'=q->q=(x+y)''->x'+y'=(x+y)'')
+@q(x'+y'=q->q=(x+y)''->x'+y'=(x+y)'')->x'+y'=(x'+y)'->(x'+y)'=(x+y)''->x'+y'=(x+y)''
+x'+y'=(x'+y)'->(x'+y)'=(x+y)''->x'+y'=(x+y)''
+(x'+y)'=(x+y)''->x'+y'=(x+y)''
+x'+y'=(x+y)'' --  WITH HIPOTIZE
+
+@b@q(x'+y'=q->q=b->x'+y'=b)->@q(x'+y'=q->q=(x+y')'->x'+y'=(x+y')')
+@q(x'+y'=q->q=(x+y')'->x'+y'=(x+y')')
+@q(x'+y'=q->q=(x+y')'->x'+y'=(x+y')')->x'+y'=(x+y)''->(x+y)''=(x+y')'->x'+y'=(x+y')'
+x'+y'=(x+y)''->(x+y)''=(x+y')'->x'+y'=(x+y')'
+(x+y)''=(x+y')'->x'+y'=(x+y')' -- WITH HIPOTIZE
+x'+y'=(x+y')' -- WITH HIPOTIZE
